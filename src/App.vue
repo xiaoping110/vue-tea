@@ -1,32 +1,39 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+    <!-- <keep-alive>
+      <router-view />
+    </keep-alive> -->
+
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"></router-view>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
   </div>
 </template>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+html,
+body {
+  width: 100vw;
+  height: 100vh;
 }
 
-#nav {
-  padding: 30px;
+.cancelButton {
+  background: #959595 !important;
+  width: 1.6rem !important;
+  height: 0.6rem;
+  color: #fff !important;
+  border-radius: 0.05rem;
+  border: none;
+  margin: 0.2rem !important;
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.confirmButton {
+  background: #d9534f !important;
+  width: 1.6rem !important;
+  height: 0.6rem;
+  color: #fff !important;
+  border-radius: 0.05rem;
+  border: none;
+  margin: 0.2rem !important;
 }
 </style>
