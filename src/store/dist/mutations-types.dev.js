@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.INIT_DATA = exports.CHECK_ITEM = exports.UNCHECK_ALL = exports.CHECK_ALL = exports.CART_LIST = exports.USER_LOGOUT = exports.USER_LOGIN = void 0;
+exports.INIT_ORDER = exports.INIT_DATA = exports.CHECK_ITEM = exports.UNCHECK_ALL = exports.CHECK_ALL = exports.CART_LIST = exports.USER_LOGOUT = exports.USER_LOGIN = void 0;
 var USER_LOGIN = "USER_LOGIN";
 exports.USER_LOGIN = USER_LOGIN;
 var USER_LOGOUT = "USER_LOGOUT";
@@ -18,3 +18,5 @@ var CHECK_ITEM = "checkItem";
 exports.CHECK_ITEM = CHECK_ITEM;
 var INIT_DATA = "initData";
 exports.INIT_DATA = INIT_DATA;
+var INIT_ORDER = "initOrder";
+exports.INIT_ORDER = INIT_ORDER;

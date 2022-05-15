@@ -102,9 +102,11 @@ export default {
       }
 
       const result = await this.$API.user.addUser({ userTel: this.userTel });
-      console.log(result);
       if (!result.success) return;
       this.USER_LOGIN(result.data);
+      // let toPath = this.$route.query.redirect.trim()
+      //   ? this.$route.query.redirect
+      //   : "/my";
       this.$router.push("/my");
     },
   },

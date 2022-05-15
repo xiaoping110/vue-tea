@@ -8,6 +8,7 @@ Vue.use(Vuex);
 import user from "./modules/user";
 import cart from "./modules/cart";
 import path from "./modules/path";
+import order from "./modules/order";
 
 export default new Vuex.Store({
   state: {},
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     user,
     cart,
     path,
+    order,
   },
   plugins: [
     createlogger(),

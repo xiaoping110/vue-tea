@@ -19,6 +19,8 @@ var _cart = _interopRequireDefault(require("./modules/cart"));
 
 var _path = _interopRequireDefault(require("./modules/path"));
 
+var _order = _interopRequireDefault(require("./modules/order"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 _vue["default"].use(_vuex["default"]);
@@ -30,7 +32,8 @@ var _default = new _vuex["default"].Store({
   modules: {
     user: _user["default"],
     cart: _cart["default"],
-    path: _path["default"]
+    path: _path["default"],
+    order: _order["default"]
   },
   plugins: [(0, _logger["default"])(), (0, _vuexPersistedstate["default"])({
     key: "$store"

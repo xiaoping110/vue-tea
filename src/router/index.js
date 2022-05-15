@@ -2,6 +2,13 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location, resolve, reject) {
+  if (resolve || reject)
+    return originalPush.call(this, location, resolve, reject);
+  return originalPush.call(this, location).catch(() => {});
+};
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -67,7 +74,7 @@ const routes = [
   {
     path: "/detail",
     name: "Detail",
-    meata: {
+    meta: {
       keepAlive: true,
     },
     component: () => import("../views/Detail.vue"),
@@ -75,7 +82,7 @@ const routes = [
   {
     path: "/order",
     name: "Order",
-    meata: {
+    meta: {
       keepAlive: true,
     },
     component: () => import("../views/Order.vue"),
@@ -97,6 +104,14 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/payment",
+    name: "Payment",
+    meta: {
+      login: true,
+    },
+    component: () => import("../views/Payment"),
+  },
 ];
 
 const router = new VueRouter({
@@ -105,8 +120,17 @@ const router = new VueRouter({
   routes,
 });
 
-const VueRouterPush = VueRouter.prototype.push;
-VueRouter.prototype.push = function push(to) {
-  return VueRouterPush.call(this, to).catch((err) => err);
-};
+router.beforeEach((to, from, next) => {
+  let loginStatus = JSON.parse(localStorage.getItem("$store")).user.loginStatus;
+
+  if (to.meta.login && !loginStatus) {
+    next(`/login?redirect=${to.path}`);
+  } else {
+    if (loginStatus && to.path === "/login") {
+      next("/my");
+    }
+    next();
+  }
+});
+
 export default router;

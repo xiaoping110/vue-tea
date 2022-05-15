@@ -8,3 +8,15 @@ export const deleteCart = (arrId) =>
 
 export const updateNum = (id, num) =>
   request({ url: "/api/updateNum", method: "post", data: { id, num } });
+
+export const addOrder = (arr) =>
+  request({ url: "/api/addOrder", method: "post", data: { arr } });
+
+export const submitOrder = (data) =>
+  request({ url: "/api/submitOrder", method: "post", data });
+
+export const payMent = (data) =>
+  request({ url: "/api/payMent", method: "post", data: { data } });
+
+export const successPayment = (data) =>
+  request({ url: "/api/successPayment", method: "post", data: { data } });

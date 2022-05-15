@@ -1,6 +1,6 @@
 <template>
   <div class="pathIndex-wrap">
-    <Header :routerFlg="'other'"></Header>
+    <Header :routerFlg="pathStatus ? 'one' : 'other'"></Header>
     <section class="path-main">
       <ul v-if="list && list.length > 0">
         <li @click="goList(item)" v-for="item in list" :key="item.id">
@@ -30,10 +30,19 @@
 import Header from "@/components/path/Header";
 import Tabbar from "@/components/common/Tabbar.vue";
 import { mapState, mapMutations } from "vuex";
+import bus from "@/common/bus";
 export default {
   name: "PathIndex",
+  data() {
+    return {
+      pathStatus: false,
+    };
+  },
   components: { Header, Tabbar },
   created() {
+    if (this.$route.query.type && this.$route.query.type === "select") {
+      this.pathStatus = true;
+    }
     this.getAddressData();
   },
   computed: {
@@ -49,12 +58,18 @@ export default {
       this.initData(result.data);
     },
     goList(option) {
-      this.$router.push({
-        name: "PathList",
-        params: {
-          key: JSON.stringify(option),
-        },
-      });
+      if (this.pathStatus) {
+        bus.$emit("selectPath", JSON.stringify(option));
+        this.$router.back();
+        return;
+      } else {
+        this.$router.push({
+          name: "PathList",
+          params: {
+            key: JSON.stringify(option),
+          },
+        });
+      }
     },
   },
 };

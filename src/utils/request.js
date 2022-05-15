@@ -16,6 +16,7 @@ const addToken = (config) => {
   const token = store.state.user.token;
   config.headers.Authorization = `Bearer ${token}`;
   config.headers.token = token;
+  config.headers.ContentType = "application/x-www-form-urlencoded";
   return config;
 };
 
@@ -36,7 +37,7 @@ request.interceptors.request.use((config) => {
 
 const checkNetStatus = (response) => {
   const { status, message, data } = response;
-  const errorCodes = [301, 401, 403, 404, 500];
+  const errorCodes = [301, 401, 403, 404, 500, "ERR_BAD_RESPONSE"];
   if (errorCodes.includes(status) || errorCodes.includes(data.code)) {
     MessageBox.alert(message || data.message);
   }

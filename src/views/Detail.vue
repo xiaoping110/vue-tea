@@ -63,6 +63,7 @@
 import BetterScroll from "better-scroll";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import { Toast } from "mint-ui";
+import { mapMutations } from "vuex";
 export default {
   name: "Detail",
   components: {
@@ -121,6 +122,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(["USER_LOGOUT"]),
     async addCart() {
       if (!this.$store.state.user.token) {
         this.$router.push("/login");
@@ -128,8 +130,14 @@ export default {
       const result = await this.$API.list.addGoodsToCart({
         goodsId: this.$route.query.id,
       });
+
       if (result.success) {
         Toast("添加成功！！！");
+      } else {
+        if (result.data.code === 1000) {
+          this.USER_LOGOUT();
+          this.$router.push(`/login?redirect=detail?id=${this.id}`);
+        }
       }
     },
     goBack() {

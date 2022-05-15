@@ -8,16 +8,16 @@
     <section class="order-content">
       <div class="path">
         <h3 class="path-title">收货信息：</h3>
-        <div class="path-info">
+        <div class="path-info" @click="goPath">
           <div>
             <span>{{ path.name }}</span>
             <span>{{ path.tel }}</span>
           </div>
           <div>
-            <span> 省:{{ path.province }}</span>
-            <span> 市:{{ path.city }}</span>
-            <span> 区:{{ path.county }}</span>
-            <span> 详细地址:{{ path.addressDetail }}</span>
+            <span> 省-{{ path.province }}</span>
+            <span> 市-{{ path.city }}</span>
+            <span> 区-{{ path.county }}</span>
+            <span> 详细地址-{{ path.addressDetail }}</span>
           </div>
         </div>
       </div>
@@ -53,13 +53,16 @@
         <span>总金额:</span>
         <em>￥{{ total.price }}</em>
       </div>
-      <div class="right">提交订单</div>
+      <div class="right" @click="goPayment">提交订单</div>
     </footer>
   </div>
 </template>
 
 <script>
+import { Toast } from "vant";
 import { mapGetters, mapMutations, mapState } from "vuex";
+import bus from "@/common/bus";
+import qs from "qs";
 export default {
   name: "Order",
   data() {
@@ -73,10 +76,21 @@ export default {
     this.getAddress();
     this.items = JSON.parse(this.$route.query.detail);
   },
+  activated() {
+    this.items = JSON.parse(this.$route.query.detail);
+    bus.$on(
+      "selectPath",
+      function (item) {
+        this.path = JSON.parse(item);
+      }.bind(this)
+    );
+  },
   computed: {
     ...mapGetters(["total", "defaultPath"]),
     ...mapState({
       list: (state) => state.cart.list,
+      order_id: (state) => state.order.list[0],
+      selectList: (state) => state.cart.selectList,
     }),
     goodsList() {
       return this.items.map((id) => {
@@ -92,6 +106,37 @@ export default {
       this.initData(result.data);
 
       this.path = this.defaultPath[0] || result.data[0];
+    },
+    async goPayment() {
+      if (!this.path) return Toast("请选择收货地址");
+
+      //1修改订单状态
+      const data = {
+        order_id: this.order_id,
+        selectList: this.selectList,
+      };
+      const result = await this.$API.cart.submitOrder(data);
+      if (!result.success) return;
+      //支付
+      let newArr = [];
+      this.goodsList.forEach((item) => {
+        newArr.push(item.goods_name);
+      });
+      const payObj = {
+        orderId: this.order_id,
+        name: newArr.join(" "),
+        price: this.total.price,
+      };
+
+      const result1 = await this.$API.cart.payMent(qs.stringify(payObj));
+      if (!result1.success) return;
+      window.location.href = result1.data.paymentUrl;
+    },
+    goPath() {
+      this.$router.push({
+        path: "/path",
+        query: { type: "select" },
+      });
     },
   },
 };
@@ -170,6 +215,7 @@ export default {
           margin-top: 20px;
           box-sizing: border-box;
           font-size: 28px;
+          background: #fff;
           img {
             width: 148px;
             height: 148px;

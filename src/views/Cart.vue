@@ -110,13 +110,16 @@ export default {
     ...mapGetters(["isCheckedALL", "total"]),
   },
   methods: {
-    ...mapMutations(["cartList", "checkItem"]),
+    ...mapMutations(["cartList", "checkItem", "initOrder"]),
     ...mapActions(["checkAllFn", "delGoodsFn"]),
     async getCartList() {
       const result = await this.$API.cart.getCartList();
+      if (!result.success) return;
+
       result.data.forEach((item) => {
         item["checked"] = true;
       });
+
       this.cartList(result.data);
     },
     isNavBar() {
@@ -125,11 +128,24 @@ export default {
     async changeNum(value, item) {
       await this.$API.cart.updateNum(item.id, value);
     },
-    goOrder() {
+    async goOrder() {
       if (!this.selectList.length) {
         Toast("请选择商品后提交！！！");
         return;
       }
+      let newList = [];
+      this.cartListInfo.forEach((item) => {
+        this.selectList.filter((id) => {
+          if (id === item.id) {
+            newList.push(item);
+          }
+        });
+      });
+      const result = await this.$API.cart.addOrder(newList);
+      if (!result.success) return;
+      this.initOrder(result.data);
+      Toast(result.message);
+
       this.$router.push({
         path: "/order",
         query: {

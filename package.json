@@ -17,6 +17,7 @@
     "mint-ui": "^2.2.13",
     "postcss-loader": "^4.3.0",
     "postcss-pxtorem": "^4.0.1",
+    "qs": "^6.10.3",
     "vant": "^2.12.47",
     "vue": "^2.6.11",
     "vue-awesome-swiper": "^3.1.3",

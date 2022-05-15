@@ -5,3 +5,4 @@ export const CHECK_ALL = "checkAll";
 export const UNCHECK_ALL = "unCheckAll";
 export const CHECK_ITEM = "checkItem";
 export const INIT_DATA = "initData";
+export const INIT_ORDER = "initOrder";
